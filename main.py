@@ -67,6 +67,8 @@ for i in range(1, len(softmax_ys)):
 correct_prediction = tf.equal(tf.argmax(sum_probability, 1), tf.argmax(y_, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
+saver = tf.train.Saver(var_list = tf.global_variables(), max_to_keep = 10)
+
 with tf.Session() as sess:
   sess.run(tf.global_variables_initializer())
   for step in range(10000):
@@ -80,3 +82,4 @@ with tf.Session() as sess:
       print 'test accuracy: {}'.format(
           sess.run(accuracy, feed_dict =\
               {x_: Dataset.test.images, y_: Dataset.test.labels, keep_prob: 1.0}))
+      saver.save(sess, './tmp/model', global_step = step)
